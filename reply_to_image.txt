@@ -19,4 +19,4 @@ def get_image(update, context):
         update.message.reply_text("Repeater Stopped")
 Like in the previous example we get the terms using the args variable from the context, but in this case we join the terms together with a , and convert to lowercase because that is what is required by the Unbounce API.
 
-You can then get an image in the chat using /get_image and some keywords like this:
+You can then get an image in the chat using /get_image and some keywords like this: /get_image mountain water nature
