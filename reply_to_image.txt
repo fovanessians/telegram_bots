@@ -1,0 +1,22 @@
+Add the following code to the start_bot() function:
+
+dispatcher.add_handler(CommandHandler('get_image', get_image, filters=Filters.user(username="@YOUR_USERNAME")))
+Replace YOUR_USERNAME with your username.
+
+This code will execute the get_image function, but only if the username matches your own.  With this filter we are only passing in 1 username, but you could also pass in a list of usernames.
+
+Now let’s create the get_image function:
+
+def get_image(update, context):
+    terms = ",".join(context.args).lower()
+    update.message.reply_text(f"Getting Image For Terms: {terms}")
+     command = context.args[0].lower()
+    if("on" == command):
+        context.user_data[echo] = True
+        update.message.reply_text("Repeater Started")
+    elif("off" == command):
+        context.user_data[echo] = False
+        update.message.reply_text("Repeater Stopped")
+Like in the previous example we get the terms using the args variable from the context, but in this case we join the terms together with a , and convert to lowercase because that is what is required by the Unbounce API.
+
+You can then get an image in the chat using /get_image and some keywords like this:
