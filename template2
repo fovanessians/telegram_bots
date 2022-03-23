@@ -1,0 +1,62 @@
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Dispatcher
+import logging
+logging.basicConfig(format='%(levelname)s - %(message)s',
+                    level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+'''created an updater variable and this will hold the updater for our Telegram bot, which is placed in a 
+global variable so that we can easily access it later from the UI. '''
+updater = None
+def start_bot():
+    global updater
+    updater = Updater(
+        '### YOUR TELEGRAM BOT AUTHENTICATION KEY HERE ###', use_context=True)
+'''We’ve added a dispatcher variable for clearer access to the dispatcher for our bot, we’ll use the dispatcher to add commands. 
+With the line dispatcher.add_handler(CommandHandler('start', start)) we have added a command handler that will execute when the user enters 
+/start and will execute the callback function start.  This command automatically executes when you add a bot as a new contact and press the 
+start button within Telegram .'''
+
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(MessageHandler(Filters.text, repeater))
+#Fortunately, Python Telegram Bot allows us to store user specific data using the context that is passed in to our callback functions.
+    dispatcher.add_handler(CommandHandler('echo', echo))
+#updater.start_polling() actually starts the bot, and after this is passed in the bot will begin to start polling Telegram for any chat updates on Telegram.
+    updater.start_polling()
+#We use the updater.idle() command here to block the script until the user sends a command to break from the Python script such as ctrl-c on windows.
+    updater.idle()
+    
+    #reply to files from the web or photos
+start_bot()
+    dispatcher.add_handler(CommandHandler('get_image', get_image, filters=Filters.user(username="@YOUR_USERNAME")))
+
+'''Command handlers require both an Update and a CallBackContext parameter.  Through the Update we send updates to chat, here using 
+update.message.reply_text automatically adds the reply only to the specific chat where the /start command was sent.'''
+def start(update, context):
+    s = "Welcome I Am The Finxter Chat Bot! Your life has now changed forever."
+    update.message.reply_text(s)
+   
+ #In our repeater we use the reply_text method, replying with update.message.text which sends the message chat text back to the user.
+def repeater(update, context):
+    if context.user_data[echo]:
+        update.message.reply_text(update.message.text)
+        
+def echo(update, context):
+    command = context.args[0].lower()
+    if("on" == command):
+        context.user_data[echo] = True
+        update.message.reply_text("Repeater Started")
+    elif("off" == command):
+        context.user_data[echo] = False
+        update.message.reply_text("Repeater Stopped")
+        
+def get_image(update, context):
+    terms = ",".join(context.args).lower()
+    update.message.reply_text(f"Getting Image For Terms: {terms}")
+     command = context.args[0].lower()
+    if("on" == command):
+        context.user_data[echo] = True
+        update.message.reply_text("Repeater Started")
+    elif("off" == command):
+        context.user_data[echo] = False
+        update.message.reply_text("Repeater Stopped")
