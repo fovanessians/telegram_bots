@@ -163,6 +163,10 @@ def birds(message):
             name=message.from_user.first_name))
 
 
+@bot.message_handler(commands=[str("Dallas")])
+def dallas(message):
+    bot.send_photo(message.chat.id, photo='https://cdn.pixabay.com/photo/2016/10/14/17/32/dallas-1740681_960_720.jpg')
+
 # Do not forget to register filters
 bot.add_custom_filter(custom_filters.TextMatchFilter())
 bot.add_custom_filter(custom_filters.TextStartsFilter())
